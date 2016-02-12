@@ -1,0 +1,20 @@
+<html>
+<head>
+<title> Editor </title>
+<%- include req %>
+<script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/theme-chrome.js"></script>
+</head>
+
+<body>
+<div class="container">
+	<div class="centered-parent">
+		<%- include users %>
+		<div id="editor" autofocus>
+			Hi! This is Ash.
+		</div>
+	</div>
+</div>
+<script src="editor.js"></script>
+</body>
+</html>

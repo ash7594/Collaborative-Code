@@ -1,0 +1,21 @@
+body {
+	margin: 0;
+	padding: 0;
+}
+
+.container {
+	background-color: lightgrey;
+	width: 100%;
+	height: 100%;
+}
+
+.centered-parent {
+	margin: 0 auto;
+	width: 800px;
+	padding-top: 100px;
+}
+
+#editor {
+	width: auto;
+	height: 400px;
+}
