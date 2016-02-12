@@ -12,10 +12,27 @@ body {
 .centered-parent {
 	margin: 0 auto;
 	width: 800px;
-	padding-top: 100px;
+	padding-top: 50px;
 }
 
 #editor {
 	width: auto;
 	height: 400px;
+}
+
+.participants-container {
+	width: auto;
+	padding: 5px 5px 5px 5px;
+	background-color: white;
+}
+
+.participant {
+	display: inline-block;
+	width: 50px;
+	line-height: 50px;
+	text-align: center;
+	background-color: grey;
+	border: 2.5px solid white;
+	font-size: 30px;
+	font-family: cursive;
 }

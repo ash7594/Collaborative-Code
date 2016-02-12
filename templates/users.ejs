@@ -1,1 +1,5 @@
-<div id="users"></div>
+<div class="participants-container">
+	<% users.forEach(function(user) { %>
+		<div class="participant" title="<%= user %>"><%= user.charAt(0).toUpperCase() %></div>
+	<% }) %>
+</div>

@@ -3,6 +3,7 @@ var express = require('express'),
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var users = [];
 
 app.set('views', path.join(__dirname, 'templates'));
 app.set('view engine', 'ejs');
@@ -17,7 +18,9 @@ app.use(session({
 }));
 
 function homePage(req, res) {
-	res.render('editor');
+	res.render('editor', {
+		users: users
+	});
 }
 
 app.get('/', homePage);
@@ -25,6 +28,12 @@ app.get('/', homePage);
 function startServer() {
 	app.listen(app.get('port'));
 	console.log('Serving on PORT ' + app.get('port'));
+	//for (var i=0;i<10;i++) {
+		users.push("Ashutosh");
+		users.push("Aditi");
+		users.push("Sudha");
+		users.push("Nisha");
+	//}
 }
 
 startServer();
