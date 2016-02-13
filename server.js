@@ -5,8 +5,12 @@ var http = require('http').Server(app),
 var path = require('path');
 var cookieParser = require('cookie-parser'),
 	session = require('express-session'),
-	bodyParser = require('body-parser');
+	bodyParser = require('body-parser'),
+	sessionStore = new session.MemoryStore(),
+	cookie = require('cookie');
 var users = [], server;
+
+const SESSION_SECRET = 'COdinG_fOR_HaCKErrANK';
 
 app.set('views', path.join(__dirname, 'templates'));
 app.set('view engine', 'ejs');
@@ -17,39 +21,64 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(cookieParser());
 app.use(session({
-	secret: 'COdinG_fOR_HaCKErrANK',
+	store: sessionStore,
+	secret: SESSION_SECRET,
+	key: 'connect.ash',
 	saveUninitialized: true,
 	resave: true
 }));
 
 function Editor(req, res) {
-//	users.push(req.params.name);
-//	res.render('editor', {
-//		users: users
-//	});
-	res.send(req.body.user);
+	if (!req.body.user) {
+		setImmediate(Page404,req,res);
+		return;
+	}
+	users.push({
+		name: req.body.user,
+		session: req.session
+	});
+	req.session.name = req.body.user;
+
+	res.render('editor', {
+		users: users
+	});
 }
 
 function HomePage(req, res) {
 	res.render('index');
 }
 
+function Page404(req, res) {
+	res.send("<h3>404 Not Found</h3>")
+}
+
 app.post('/editor', Editor);
+app.get('/editor', Page404);
 app.get('/', HomePage);
+app.get('*', Page404);
 
 function startServer() {
 	http.listen(app.get('port'));
 	console.log('Serving on PORT ' + app.get('port'));
-	//for (var i=0;i<10;i++) {
-		users.push("Ashutosh");
-		users.push("Aditi");
-		users.push("Sudha");
-		users.push("Nisha");
-	//}
 }
+
+io.set('authorization', function(data, cback) {
+	if (data.headers.cookie) {
+		data.cookie = cookie.parse(decodeURIComponent(data.headers.cookie));
+		data.sessionID = cookieParser.signedCookie(
+			data.cookie['connect.ash'],
+			SESSION_SECRET
+		);
+		console.log(data.sessionID);
+	} else {
+		return cback('Cookie Not Sent', false);
+	}
+	cback(null, true);
+});
 
 io.on('connection', function(socket) {
 	console.log("connected");
+	console.log(socket.request.sessionID);
 });
 
 startServer();
