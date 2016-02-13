@@ -16,9 +16,6 @@ app.set('views', path.join(__dirname, 'templates'));
 app.set('view engine', 'ejs');
 app.set('port', process.env.PORT || 8000);
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'static')));
 app.use(cookieParser());
 app.use(session({
 	store: sessionStore,
@@ -27,6 +24,9 @@ app.use(session({
 	saveUninitialized: true,
 	resave: true
 }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'static')));
 
 function Editor(req, res) {
 	if (!req.body.user) {
@@ -37,7 +37,7 @@ function Editor(req, res) {
 		name: req.body.user,
 		session: req.session
 	});
-	req.session.name = req.body.user;
+	req.session.username = req.body.user;
 
 	res.render('editor', {
 		users: users
@@ -69,7 +69,6 @@ io.set('authorization', function(data, cback) {
 			data.cookie['connect.ash'],
 			SESSION_SECRET
 		);
-		console.log(data.sessionID);
 	} else {
 		return cback('Cookie Not Sent', false);
 	}
@@ -78,7 +77,12 @@ io.set('authorization', function(data, cback) {
 
 io.on('connection', function(socket) {
 	console.log("connected");
-	console.log(socket.request.sessionID);
+	sessionStore.get(socket.request.sessionID, function(err, session) {
+		if (err) {
+			throw err;
+		} else
+			console.log(session.username);
+	});
 });
 
 startServer();
