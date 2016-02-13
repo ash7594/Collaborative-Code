@@ -36,3 +36,17 @@ body {
 	font-size: 30px;
 	font-family: cursive;
 }
+
+#user {
+	display: table-cell;
+	vertical-align: middle;
+	background-color: lightgrey;
+	border: none;
+	font-size: 50px;
+	text-align: center;
+	height: 100%;
+}
+
+input:focus {
+	outline: none;
+}
