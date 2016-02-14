@@ -91,14 +91,15 @@ io.set('authorization', function(data, cback) {
 io.on('connection', function(socket) {
 	console.log("connected");
 	sessionStore.get(socket.request.sessionID, function(err, session) {
-		console.log(err);
 		if (err)
 			throw err;
 		socket.user = new userInfo(session.uid, session.username, session.id);
+		socket.broadcast.emit('user_connect', { uid: socket.user.uid, name: socket.user.name })
 	});
 
 	socket.on('disconnect', function() {
-		console.log("disconnected");	
+		console.log("disconnected");
+		io.emit('user_disconnect', socket.user.uid);
 	});
 });
 

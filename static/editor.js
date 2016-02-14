@@ -1,8 +1,6 @@
 var editor,
 	session;
 
-var socket = io();
-
 function init() {
 	editor = ace.edit("editor");
 	editor.setFontSize(19);
