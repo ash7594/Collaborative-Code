@@ -53,8 +53,12 @@ function Page404(req, res) {
 	res.send("<h3>404 Not Found</h3>")
 }
 
+function HomeRedirect(req, res) {
+	res.redirect('/');
+}
+
 app.post('/editor', Editor);
-app.get('/editor', Page404);
+app.get('/editor', HomeRedirect);
 app.get('/', HomePage);
 app.get('*', Page404);
 
