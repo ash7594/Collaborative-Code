@@ -37,8 +37,7 @@ var userInfo = function(uid, name, sid) {
 
 function Editor(req, res) {
 	if (!req.body.user) {
-		setImmediate(Page404,req,res);
-		return;
+		return res.redirect('/404');
 	}
 	var uid = shortid.generate();
 	users.push({ uid: uid, name: req.body.user });
@@ -62,9 +61,10 @@ function HomeRedirect(req, res) {
 	res.redirect('/');
 }
 
+app.get('/', HomePage);
 app.post('/editor', Editor);
 app.get('/editor', HomeRedirect);
-app.get('/', HomePage);
+app.get('/404', Page404);
 app.get('*', Page404);
 
 function startServer() {
