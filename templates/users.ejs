@@ -1,5 +1,5 @@
 <div class="participants-container">
 	<% users.forEach(function(user) { %>
-		<div class="participant" title="<%= user.name %>"><%= user.name.charAt(0).toUpperCase() %></div>
+	<div id="<%= user.uid %>" class="participant" title="<%= user.name %>"><%= user.name.charAt(0).toUpperCase() %></div>
 	<% }) %>
 </div>

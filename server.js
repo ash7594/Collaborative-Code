@@ -8,6 +8,7 @@ var cookieParser = require('cookie-parser'),
 	bodyParser = require('body-parser'),
 	sessionStore = new session.MemoryStore(),
 	cookie = require('cookie');
+var shortid = require('shortid');
 var users = [], server;
 
 const SESSION_SECRET = 'COdinG_fOR_HaCKErrANK';
@@ -28,17 +29,21 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'static')));
 
+var userInfo = function(uid, name, sid) {
+	this.uid = uid;
+	this.name = name;
+	this.sid = sid;
+}
+
 function Editor(req, res) {
-	console.log("editor");
 	if (!req.body.user) {
 		setImmediate(Page404,req,res);
 		return;
 	}
-	users.push({
-		name: req.body.user,
-		session: req.session
-	});
+	var uid = shortid.generate();
+	users.push({ uid: uid, name: req.body.user });
 	req.session.username = req.body.user;
+	req.session.uid = uid;
 
 	res.render('editor', {
 		users: users
@@ -87,10 +92,13 @@ io.on('connection', function(socket) {
 	console.log("connected");
 	sessionStore.get(socket.request.sessionID, function(err, session) {
 		console.log(err);
-		if (err) {
+		if (err)
 			throw err;
-		} else
-			console.log(session.username);
+		socket.user = new userInfo(session.uid, session.username, session.id);
+	});
+
+	socket.on('disconnect', function() {
+		console.log("disconnected");	
 	});
 });
 
