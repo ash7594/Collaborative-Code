@@ -29,6 +29,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'static')));
 
 function Editor(req, res) {
+	console.log("editor");
 	if (!req.body.user) {
 		setImmediate(Page404,req,res);
 		return;
@@ -63,6 +64,9 @@ function startServer() {
 }
 
 io.set('authorization', function(data, cback) {
+	if (Object.keys(sessionStore.sessions).length == 0) {
+		return cback('Unexpected', false);
+	}
 	if (data.headers.cookie) {
 		data.cookie = cookie.parse(decodeURIComponent(data.headers.cookie));
 		data.sessionID = cookieParser.signedCookie(
@@ -78,6 +82,7 @@ io.set('authorization', function(data, cback) {
 io.on('connection', function(socket) {
 	console.log("connected");
 	sessionStore.get(socket.request.sessionID, function(err, session) {
+		console.log(err);
 		if (err) {
 			throw err;
 		} else
