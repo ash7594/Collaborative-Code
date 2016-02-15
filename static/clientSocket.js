@@ -15,11 +15,7 @@ socket.on('user_disconnect', function(uid) {
 });
 
 socket.on('insert', function(d) {
-	var oldPosition = new Position(editor.selection.getCursor().row,
-		editor.selection.getCursor().column);
-	editor.selection.moveTo(d.start.r, d.start.c);
-	editor.insert(d.data);
-	editor.selection.moveTo(oldPosition.r, oldPosition.c);
+	editor.session.insert(d.start, d.data);
 });
 
 function TransmitInsertion(data, start, end) {

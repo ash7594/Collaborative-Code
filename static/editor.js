@@ -18,13 +18,11 @@ var Position = function(r,c) {
 editor.getSession().on('change', function(e) {
 	if (!(editor.curOp && editor.curOp.command.name))
 		return;
-	//console.log(e.lines);
+	console.log(e);
 	if (e.action == "insert") {
-		TransmitInsertion(
-			e.lines[0],
-			new Position(e.start.row, e.start.column),
-			new Position(e.end.row, e.end.column)
-		);
+		TransmitInsertion(e.lines[0], e.start, e.end);
+	} else if (e.action == "remove") {
+		
 	}
 });
 
