@@ -101,6 +101,10 @@ io.on('connection', function(socket) {
 		console.log("disconnected");
 		io.emit('user_disconnect', socket.user.uid);
 	});
+
+	socket.on('insert', function(d) {
+		socket.broadcast.emit('insert', d);	
+	});	
 });
 
 startServer();
