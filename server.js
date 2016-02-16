@@ -11,6 +11,9 @@ var cookieParser = require('cookie-parser'),
 var shortid = require('shortid');
 var users = [], server;
 
+var lines = [];
+
+const DEFAULT_TEXT = 'Hi there! from Ash';
 const SESSION_SECRET = 'COdinG_fOR_HaCKErrANK';
 
 app.set('views', path.join(__dirname, 'templates'));
@@ -45,7 +48,8 @@ function Editor(req, res) {
 	req.session.uid = uid;
 
 	res.render('editor', {
-		users: users
+		users: users,
+		text: DEFAULT_TEXT
 	});
 }
 
@@ -99,6 +103,15 @@ io.on('connection', function(socket) {
 
 	socket.on('disconnect', function() {
 		console.log("disconnected");
+		
+		//delete from users
+		for (var i=0;i<users.length;i++) {
+			if (users[i].uid == socket.user.uid) {
+				users.splice(i,1);
+				break;
+			}
+		}
+
 		io.emit('user_disconnect', socket.user.uid);
 	});
 
