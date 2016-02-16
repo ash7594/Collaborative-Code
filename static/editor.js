@@ -7,6 +7,7 @@ function init() {
 	editor.setTheme('ace/theme/chrome');
 	editor.setShowPrintMargin(false);
 	editor.renderer.setShowGutter(false);
+	editor.getSession().setUseWrapMode(true);
 
 	cursorDiv = document.getElementsByClassName('ace_cursor')[0];
 }
@@ -23,9 +24,13 @@ editor.getSession().on('change', function(e) {
 		return;
 	console.log(e);
 	if (e.action == "insert") {
-		TransmitInsertion(e.lines[0], e.start, e.end);
+		if (e.lines[0].length == 0) {
+			TransmitInsertion('\n', e.start, e.end);
+		} else {
+			TransmitInsertion(e.lines[0], e.start, e.end);
+		}
 	} else if (e.action == "remove") {
-		TransmitDeletion(e.start, e.end);	
+		TransmitDeletion(e.start, e.end);
 	}
 });
 

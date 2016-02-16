@@ -34,7 +34,11 @@ socket.on('user_disconnect', function(uid) {
 });
 
 socket.on('insert', function(d) {
-	editor.session.insert(d.start, d.data);
+	if (d.data == '\n') {
+		editor.session.getDocument().insertNewLine(d.start);
+	} else {
+		editor.session.insert(d.start, d.data);
+	}
 });
 
 socket.on('remove', function(d) {
