@@ -22,7 +22,7 @@ editor.getSession().on('change', function(e) {
 	if (e.action == "insert") {
 		TransmitInsertion(e.lines[0], e.start, e.end);
 	} else if (e.action == "remove") {
-		
+		TransmitDeletion(e.start, e.end);	
 	}
 });
 

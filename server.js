@@ -105,6 +105,10 @@ io.on('connection', function(socket) {
 	socket.on('insert', function(d) {
 		socket.broadcast.emit('insert', d);	
 	});	
+
+	socket.on('remove', function(d) {
+		socket.broadcast.emit('remove', d);	
+	});	
 });
 
 startServer();
