@@ -108,7 +108,11 @@ io.on('connection', function(socket) {
 
 	socket.on('remove', function(d) {
 		socket.broadcast.emit('remove', d);	
-	});	
+	});
+
+	socket.on('cursor', function(d) {
+		socket.broadcast.emit('cursor', { uid: socket.user.uid, pos: d });
+	});
 });
 
 startServer();

@@ -1,4 +1,5 @@
 var editor;
+var cursorDiv;
 
 function init() {
 	editor = ace.edit("editor");
@@ -6,6 +7,8 @@ function init() {
 	editor.setTheme('ace/theme/chrome');
 	editor.setShowPrintMargin(false);
 	editor.renderer.setShowGutter(false);
+
+	cursorDiv = document.getElementsByClassName('ace_cursor')[0];
 }
 
 init();
@@ -26,3 +29,9 @@ editor.getSession().on('change', function(e) {
 	}
 });
 
+editor.getSession().selection.on('changeCursor', function(e) {
+	console.log("cursor");
+	setTimeout(function() {
+		TransmitCursor(new Position(cursorDiv.style.top, cursorDiv.style.left));
+	}, 10);
+});

@@ -50,3 +50,11 @@ body {
 input:focus {
 	outline: none;
 }
+
+.fixed_cursor {
+	position: relative;
+	left: 4px;
+	top: 0px;
+	width: 2px;
+	background-color: rgb(185, 6, 144);
+}
