@@ -58,3 +58,12 @@ input:focus {
 	width: 2px;
 	background-color: rgb(185, 6, 144);
 }
+
+.fixed_cursor_helper {
+	position: relative;
+	left: 4px;
+	top: 0px;
+	width: auto;
+	color: white;
+	background-color: rgba(185, 6, 144, 0.5);
+}
