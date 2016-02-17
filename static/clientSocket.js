@@ -42,6 +42,12 @@ socket.on('set_editor_content', function(code) {
 socket.on('user_disconnect', function(uid) {
 	var div = document.getElementById(uid);
 	div.parentNode.removeChild(div);
+
+	div = document.getElementById(uid + "_cursor");
+	div.parentNode.removeChild(div);
+
+	div = document.getElementById(uid + "_cursor_helper");
+	div.parentNode.removeChild(div);
 });
 
 socket.on('insert', function(d) {
