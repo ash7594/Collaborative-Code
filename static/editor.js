@@ -37,9 +37,10 @@ editor.getSession().on('change', function(e) {
 
 editor.getSession().selection.on('changeCursor', function(e) {
 	console.log("cursor");
-	typed = "";
+	//typed = "";
 	setTimeout(function() {
-		TransmitCursor(new Position(cursorDiv.style.top, cursorDiv.style.left));
+		TransmitCursor(new Position(cursorDiv.style.top, cursorDiv.style.left),
+			editor.getCursorPosition().row);
 	}, 10);
 });
 

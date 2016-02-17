@@ -1,6 +1,6 @@
 var socket = io();
 var cursor_ref;
-var timer;
+var timer, lockLine = -1;
 
 const LOCK_TIME = 5 * 1000;
 
@@ -70,16 +70,21 @@ function TransmitDeletion(start, end) {
 	socket.emit('remove', { start: start, end: end });
 }
 
-function TransmitCursor(pos) {
+function TransmitCursor(pos, line) {
 	socket.emit('cursor', pos);
-	if (timer)
-		clearTimeout(timer);
-	resetLock();
+	if (lockLine != -1) {
+		if (lockLine != line) {
+			if (timer)
+				clearTimeout(timer);
+			resetLock();
+		}
+	}
 }
 
-function lockAquired() {
+function lockAquired(line) {
 	console.log("token");
 	editor.setReadOnly(false);
+	lockLine = line;
 	timer = setTimeout(resetLock, LOCK_TIME);
 	//editor.session.insert(editor.getCursorPosition(), typed);
 	//typed = "";
@@ -88,6 +93,7 @@ function lockAquired() {
 function resetLock() {
 	console.log("lock reset");
 	editor.setReadOnly(true);
+	lockLine = -1;
 }
 
 function extendLock(line) {
