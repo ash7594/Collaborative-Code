@@ -16,6 +16,13 @@ var lines = [];
 const DEFAULT_TEXT = 'Hi there! from Ash';
 const SESSION_SECRET = 'COdinG_fOR_HaCKErrANK';
 
+var semaphore = function(locker, text) {
+	this.lock = locker;
+	this.text = text;
+};
+
+lines.push(new semaphore(null, DEFAULT_TEXT));
+
 app.set('views', path.join(__dirname, 'templates'));
 app.set('view engine', 'ejs');
 app.set('port', process.env.PORT || 8000);
@@ -115,9 +122,13 @@ io.on('connection', function(socket) {
 		io.emit('user_disconnect', socket.user.uid);
 	});
 
+	socket.on('check_lock', function(d, cback) {
+		cback(false);
+	});
+
 	socket.on('insert', function(d) {
-		socket.broadcast.emit('insert', d);	
-	});	
+		socket.broadcast.emit('insert', d);
+	});
 
 	socket.on('remove', function(d) {
 		socket.broadcast.emit('remove', d);	

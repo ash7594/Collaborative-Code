@@ -1,4 +1,4 @@
-var editor;
+var editor, typed = "";
 var cursorDiv;
 
 function init() {
@@ -8,6 +8,7 @@ function init() {
 	editor.setShowPrintMargin(false);
 	editor.renderer.setShowGutter(false);
 	editor.getSession().setUseWrapMode(true);
+	editor.setReadOnly(true);
 
 	cursorDiv = document.getElementsByClassName('ace_cursor')[0];
 }
@@ -36,7 +37,21 @@ editor.getSession().on('change', function(e) {
 
 editor.getSession().selection.on('changeCursor', function(e) {
 	console.log("cursor");
+	typed = "";
 	setTimeout(function() {
 		TransmitCursor(new Position(cursorDiv.style.top, cursorDiv.style.left));
 	}, 10);
+});
+
+editor.keyBinding.addKeyboardHandler({
+	handleKeyboard : function(data, hash, keyString, keyCode, event) {
+		if (hash === -1 || (keyCode <= 40 && keyCode >= 37)) return false;
+
+		//typed += keyString;
+		if (editor.getReadOnly())
+			checkLineLock(editor.getCursorPosition().row);
+		else
+			extendLock();
+		//return {command: "null", passEvent: false};
+	}
 });
