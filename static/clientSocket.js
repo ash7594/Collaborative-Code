@@ -31,6 +31,14 @@ function createCursorDiv(uid) {
 	document.getElementById('editor').appendChild(div);
 }
 
+socket.on('get_editor_content', function(cback) {
+	cback(editor.getValue());
+});
+
+socket.on('set_editor_content', function(code) {
+	editor.setValue(code, 1);
+});
+
 socket.on('user_disconnect', function(uid) {
 	var div = document.getElementById(uid);
 	div.parentNode.removeChild(div);

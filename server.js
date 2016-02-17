@@ -65,13 +65,13 @@ function Editor(req, res) {
 		return res.redirect('/404');
 	}
 	var uid = shortid.generate();
-	users.push({ uid: uid, name: req.body.user });
+	users.push({ uid: uid, name: req.body.user, socket: null });
 	req.session.username = req.body.user;
 	req.session.uid = uid;
 
 	res.render('editor', {
 		users: users,
-		text: DEFAULT_TEXT
+		text: ""
 	});
 }
 
@@ -120,7 +120,29 @@ io.on('connection', function(socket) {
 		if (err)
 			throw err;
 		socket.user = new userInfo(session.uid, session.username, session.id);
-		socket.broadcast.emit('user_connect', { uid: socket.user.uid, name: socket.user.name })
+
+		var masterSocket;
+		for (var i=0;i<users.length;i++) {
+			if (users[i].uid == socket.user.uid) {
+				users[i].socket = socket;
+				break;
+			}
+		}
+
+		for (var i=0;i<users.length;i++) {
+			if (users[i].uid != socket.user.uid) {
+				masterSocket = users[i].socket;
+				break;
+			}
+		}
+
+		if (masterSocket)
+			masterSocket.emit('get_editor_content', function(code) {
+				socket.emit('set_editor_content', code);
+			});
+		else
+			socket.emit('set_editor_content', DEFAULT_TEXT);
+		socket.broadcast.emit('user_connect', { uid: socket.user.uid, name: socket.user.name });
 	});
 
 	socket.on('disconnect', function() {
