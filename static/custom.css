@@ -16,6 +16,7 @@ body {
 }
 
 #editor {
+	position: relative;
 	width: auto;
 	height: 400px;
 }
@@ -52,7 +53,7 @@ input:focus {
 }
 
 .fixed_cursor {
-	position: relative;
+	position: absolute;
 	left: 4px;
 	top: 0px;
 	width: 2px;
@@ -60,7 +61,7 @@ input:focus {
 }
 
 .fixed_cursor_helper {
-	position: relative;
+	position: absolute;
 	left: 4px;
 	top: 0px;
 	width: auto;

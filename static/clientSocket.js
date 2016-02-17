@@ -66,7 +66,7 @@ socket.on('cursor', function(d) {
 	}
 	div.style.top = d.pos.r;
 	div.style.left = d.pos.c;
-	div2.style.top = d.pos.r;
+	div2.style.top = (parseFloat(d.pos.r) + parseFloat(div2.style.height)) + "px";
 	div2.style.left = d.pos.c;
 });
 
