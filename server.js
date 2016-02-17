@@ -158,6 +158,11 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('insert', function(d) {
+		if (d.data == '\n') {
+			if (lines[d.start.row].timer)
+				clearTimeout(lines[d.start.row].timer);
+			lines[d.start.row].resetLock();
+		}
 		socket.broadcast.emit('insert', d);
 	});
 
