@@ -72,6 +72,9 @@ function TransmitDeletion(start, end) {
 
 function TransmitCursor(pos) {
 	socket.emit('cursor', pos);
+	if (timer)
+		clearTimeout(timer);
+	resetLock();
 }
 
 function lockAquired() {
