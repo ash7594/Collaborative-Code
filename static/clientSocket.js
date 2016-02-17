@@ -87,16 +87,17 @@ function resetLock() {
 	editor.setReadOnly(true);
 }
 
-function extendLock() {
+function extendLock(line) {
 	console.log("lock extended");
 	clearTimeout(timer);
 	timer = setTimeout(resetLock, LOCK_TIME);
+	socket.emit('extend_lock', line);
 }
 
 function checkLineLock(line) {
 	socket.emit('check_lock', line, function(is_locked) {
 		if (!is_locked) {
-			lockAquired();
+			lockAquired(line);
 		} else {
 			typed = "";
 			console.log("denied");

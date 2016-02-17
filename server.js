@@ -11,17 +11,32 @@ var cookieParser = require('cookie-parser'),
 var shortid = require('shortid');
 var users = [], server;
 
-var lines = [];
+var lines = {};
 
+const LOCK_TIME = 5 * 1000;
 const DEFAULT_TEXT = 'Hi there! from Ash';
 const SESSION_SECRET = 'COdinG_fOR_HaCKErrANK';
 
-var semaphore = function(locker, text) {
-	this.lock = locker;
-	this.text = text;
+var semaphore = function(key, locker) {
+	this.key = key;
+	this.locker = locker;
+	this.timer;
+	var self = this;
+
+	function resetLock() {
+		console.log("reset");
+		self.locker = null;
+	}
+	this.resetLock = resetLock;
+
+	function extendLock() {
+		clearTimeout(self.timer);
+		self.timer = setTimeout(self.resetLock, LOCK_TIME);
+	}
+	this.extendLock = extendLock;
 };
 
-lines.push(new semaphore(null, DEFAULT_TEXT));
+lines[0] = new semaphore(0, null);
 
 app.set('views', path.join(__dirname, 'templates'));
 app.set('view engine', 'ejs');
@@ -123,7 +138,23 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('check_lock', function(d, cback) {
-		cback(false);
+		if (!lines[d]) {
+			lines[d] = new semaphore(d, null);
+			lines[d].locker = socket.user.uid;
+			lines[d].timer = setTimeout(lines[d].resetLock, LOCK_TIME);
+			return cback(false);
+		}
+		if (lines[d].locker == null) {
+			lines[d].locker = socket.user.uid;
+			lines[d].timer = setTimeout(lines[d].resetLock, LOCK_TIME);
+			return cback(false);
+		}
+		cback(true);
+	});
+
+	socket.on('extend_lock', function(d) {
+		console.log("extend lock");
+		lines[d].extendLock();
 	});
 
 	socket.on('insert', function(d) {

@@ -51,7 +51,7 @@ editor.keyBinding.addKeyboardHandler({
 		if (editor.getReadOnly())
 			checkLineLock(editor.getCursorPosition().row);
 		else
-			extendLock();
+			extendLock(editor.getCursorPosition().row);
 		//return {command: "null", passEvent: false};
 	}
 });
